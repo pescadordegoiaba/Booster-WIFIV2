@@ -81,3 +81,5 @@ Cabe ressaltar que este é um script bastante complexo e aborda várias áreas d
 
 requirements
 pip install numpy scikit-learn requests beautifulsoup4 dnspython
+
+OBS: Lebrando que o script deve ser executado com permissões de superusario(root)

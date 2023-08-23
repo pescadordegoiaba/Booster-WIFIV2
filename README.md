@@ -74,6 +74,9 @@
     Execução Principal (if __name__ == "__main__":):
     Nesta seção, várias operações são realizadas sequencialmente, incluindo medição de latência, ajustes de configuração da interface Wi-Fi, cálculo do score de congestionamento, otimizações de DNS, aceleração de conteúdo com CDN, otimização de parâmetros TCP/IP, roaming, otimização de canais e processamento de pacotes.
 
+    UPDATE 22/08/2023
+    ADICIONEI UMA FUNÇÂO QUE REUTILIZA PACKETS PERDIDOS, ASSIM ENVIANDO OS PACKETS PERDIDOS NOVAMENTE, NÃO SEI SE AJUDA MAIS TA AI
+
 Cabe ressaltar que este é um script bastante complexo e aborda várias áreas de otimização e gerenciamento de redes. Ele demonstra um ambiente simulado para testar diferentes técnicas de otimização e ajustes em uma rede Wi-Fi. Para uso em um cenário real, cada seção seria cuidadosamente adaptada e testada.
 
 requirements

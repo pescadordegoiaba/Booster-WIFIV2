@@ -168,14 +168,16 @@ def set_tcp_parameter(parameter, value):
 
 def optimize_tcp_parameters():
     parameters = [
-        {'parameter': 'net.ipv4.tcp_window_scaling', 'value': 0},
         {'parameter': 'net.core.rmem_max', 'value': 16777216},  # Exemplo: 16 MB
         {'parameter': 'net.core.wmem_max', 'value': 16777216},  # Exemplo: 16 MB
         # Adicione mais parâmetros conforme necessário
+        # Opções para melhorar o tratamento de perdas de pacotes
+        {'parameter': 'net.ipv4.tcp_moderate_rcvbuf', 'value': '1'},
+        {'parameter': 'net.ipv4.tcp_early_retrans', 'value': '1'},
     ]
     
     # Adicionando parâmetros de tamanho de buffer crescente
-    buffer_sizes_kb = [200, 300, 500, 600, 700, 1000, 2000, 3000, 4000, 5000, 10000, 20000]
+    buffer_sizes_kb = [200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 8000, 5000, 10000, 20000]
     for size_kb in buffer_sizes_kb:
         parameters.append({'parameter': 'net.ipv4.tcp_rmem', 'value': f'4096 87380 {size_kb * 1024}'})
         parameters.append({'parameter': 'net.ipv4.tcp_wmem', 'value': f'4096 65536 {size_kb * 1024}'})
@@ -233,6 +235,68 @@ def set_wifi_rate(interface, rate):
         print(f"Taxa de bits configurada para {rate}.")
     except Exception as e:
         print(f"Erro ao configurar a taxa de bits: {e}")
+
+
+          #O script esta em fase beta entao pare de ser burro e saiba utiliza-lo com eficiencia
+
+
+class Pacote:
+    def __init__(self, id_pacote):
+        self.id_pacote = id_pacote
+        self.enviado = False
+        self.recebido = False
+
+class GerenciadorPacotes:
+    def __init__(self):
+        self.pacotes = []
+        self.pacotes_enviados = []
+        self.pacotes_recebidos = []
+
+    def enviar_pacote(self, pacote):
+        if not pacote.enviado:
+            print(f"Enviando pacote {pacote.id_pacote}")
+            pacote.enviado = True
+            self.pacotes_enviados.append(pacote)
+        else:
+            print(f"Pacote {pacote.id_pacote} já foi enviado anteriormente.")
+
+    def receber_pacote(self, pacote):
+        if not pacote.recebido:
+            print(f"Recebido pacote {pacote.id_pacote}")
+            pacote.recebido = True
+            self.pacotes_recebidos.append(pacote)
+        else:
+            print(f"Pacote {pacote.id_pacote} já foi recebido anteriormente.")
+
+    def reenviar_pacotes_perdidos(self):
+        pacotes_perdidos = [pacote for pacote in self.pacotes_enviados if not pacote.recebido]
+
+        if pacotes_perdidos:
+            print("Reenviando pacotes perdidos...")
+            for pacote in pacotes_perdidos:
+                self.enviar_pacote(pacote)
+
+    def processar(self):
+        for pacote in self.pacotes:
+            self.enviar_pacote(pacote)
+            self.receber_pacote(pacote)
+        self.reenviar_pacotes_perdidos()
+
+def simular_rede(num_pacotes):
+    gerenciador_pacotes = GerenciadorPacotes()
+
+    for id_pacote in range(1, num_pacotes + 1):
+        pacote = Pacote(id_pacote)
+        gerenciador_pacotes.pacotes.append(pacote)
+
+    gerenciador_pacotes.processar()
+
+simular_rede(15)
+
+
+
+
+
 
 
 
